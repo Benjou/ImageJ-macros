@@ -1,0 +1,33 @@
+rename("dd");
+run("Clear Results");
+run("Subtract Background...", "rolling=10 light separate sliding");
+run("Split Channels");
+
+selectWindow("dd (green)");
+close();
+selectWindow("dd (red)");
+close();
+selectWindow("dd (blue)");
+
+//run("Bandpass Filter...", "filter_large=200 filter_small=10 suppress=None tolerance=5 autoscale saturate");
+setTool("line");
+waitForUser("measure the diameter of petri dish");
+run("Measure");
+setThreshold(0, 225);
+run("Threshold...");
+waitForUser("adjust the background");
+setOption("BlackBackground", true);
+run("Convert to Mask");
+run("Close-");
+setTool("oval");
+waitForUser("make oval to remove non usable parts and clear up things");
+run("Measure");
+setBackgroundColor(0, 0, 0);
+run("Clear Outside");
+run("Watershed");
+run("Analyze Particles...", "size=20-2000 circularity=0.50-1.00 show=Outlines display");
+
+waitForUser("Looks good?");
+close();
+close();
+String.copyResults();
